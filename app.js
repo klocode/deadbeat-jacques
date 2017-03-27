@@ -44,17 +44,21 @@ $(document).ready(function(){
     $('#header').empty().append(`: ${tag}`)
   })
 
-  function populateNotes(url) {
+  function populateNotes(){
     $('#noteList').empty()
-    $.getJSON(url)
+    $.getJSON(api_root + 'api/notes')
       .done(function(response){
         response.notes.forEach(function(note){
           $('#noteList').append(
             noteDisplay(note)
           )
         })
+        if(window.location.hash){
+          $('#modalOne .modal-body').html($(location.hash).html())
+          $('#modalOne').modal('show')
+        }
       })
-    }
+  }
 
   function populateTagNotes(tag) {
     $('#noteList').empty()
@@ -80,36 +84,13 @@ $(document).ready(function(){
       })
   })
 
-  function openNoteModal() {
-    if(window.location.hash) {
-      noteId = window.location.hash
-        $("#modalOne .modal-body").html(noteDisplay(noteId))
-        $("#modalOne").modal("show")
-    }
-  }
+  // function openNoteModal() {
+  //   if(window.location.hash) {
+  //     noteId = window.location.hash
+  //       $("#modalOne .modal-body").html(noteDisplay(noteId))
+  //       $("#modalOne").modal("show")
+  //   }
+  // }
 
-  $(document).on('click', '.note_show', function(ev){
-    // ev.preventDefault()
-    id_to_fetch = $(ev.target).attr("href")
-    console.log($(id_to_fetch).html())
-    $('#modalOne .modal-body').html($(id_to_fetch).html())
-    $('#modalOne').modal('show')
-  })
-  function first_load(){
-    $('#noteList').empty()
-    $.getJSON(api_root + "api/notes")
-      .done(function(response){
-        response.notes.forEach(function(note){
-          $('#noteList').append(
-            noteDisplay(note)
-          )
-        })
-        if(window.location.hash){
-          $('a[href="' + window.location.hash + '"]').click()
-        }
-      })
-  }
-
-
-first_load()
+ populateNotes()
 })
